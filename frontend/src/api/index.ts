@@ -6,6 +6,7 @@ import type {
   TaskLog,
   ModuleNode,
   Connection,
+  Project,
 } from '@/types'
 
 const api = axios.create({
@@ -60,10 +61,31 @@ export const moduleApi = {
   deleteModule: (id: string): Promise<void> => api.delete(`/modules/${id}`),
 }
 
+// 項目 API
+export const projectApi = {
+  // 獲取所有項目
+  getAllProjects: (): Promise<Project[]> => api.get('/projects'),
+  
+  // 獲取項目詳情
+  getProject: (id: string): Promise<Project> => api.get(`/projects/${id}`),
+  
+  // 創建項目
+  createProject: (project: Partial<Project>): Promise<Project> =>
+    api.post('/projects', project),
+  
+  // 更新項目
+  updateProject: (id: string, project: Partial<Project>): Promise<Project> =>
+    api.put(`/projects/${id}`, project),
+  
+  // 刪除項目
+  deleteProject: (id: string): Promise<void> => api.delete(`/projects/${id}`),
+}
+
 // 工作流 API
 export const workflowApi = {
   // 获取所有工作流
-  getAllWorkflows: (): Promise<Workflow[]> => api.get('/workflows'),
+  getAllWorkflows: (projectId?: string): Promise<Workflow[]> => 
+    api.get('/workflows', { params: projectId ? { projectId } : {} }),
   
   // 获取工作流详情
   getWorkflow: (id: string): Promise<Workflow> => api.get(`/workflows/${id}`),

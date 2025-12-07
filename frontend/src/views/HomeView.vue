@@ -7,14 +7,14 @@
       <el-main>
         <el-row :gutter="20">
           <el-col :span="8">
-            <el-card shadow="hover" @click="goToWorkflow">
+            <el-card shadow="hover" @click="goToProjects">
               <template #header>
                 <div class="card-header">
-                  <el-icon><Document /></el-icon>
-                  <span>工作流设计</span>
+                  <el-icon><Folder /></el-icon>
+                  <span>项目开发</span>
                 </div>
               </template>
-              <p>创建和编辑 AI 工作流</p>
+              <p>创建和管理 AI 项目，通过拖拽方式设计工作流</p>
             </el-card>
           </el-col>
           <el-col :span="8">
@@ -47,12 +47,12 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { Document, Box, List } from '@element-plus/icons-vue'
+import { Folder, Box, List } from '@element-plus/icons-vue'
 
 const router = useRouter()
 
-const goToWorkflow = () => {
-  router.push('/workflow')
+const goToProjects = () => {
+  router.push('/projects')
 }
 
 const goToModules = () => {

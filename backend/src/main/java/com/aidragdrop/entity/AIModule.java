@@ -20,6 +20,9 @@ public class AIModule {
     @Column(nullable = false)
     private String type;
     
+    @Column(length = 50)
+    private String category = "basic"; // basic(基礎組件), advanced(高級組件)
+    
     private String description;
     
     private String icon;
@@ -34,6 +37,10 @@ public class AIModule {
     @Column(columnDefinition = "TEXT", nullable = false)
     @Convert(converter = JsonConverter.class)
     private Map<String, Object> apiConfig;
+    
+    @Column(columnDefinition = "TEXT")
+    @Convert(converter = JsonConverter.class)
+    private Map<String, Object> properties; // 組件屬性配置
     
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

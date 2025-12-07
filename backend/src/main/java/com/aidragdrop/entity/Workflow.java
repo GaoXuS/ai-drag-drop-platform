@@ -20,6 +20,9 @@ public class Workflow {
     @Column(columnDefinition = "TEXT")
     private String description;
     
+    @Column(nullable = false)
+    private String projectId;
+    
     @Column(columnDefinition = "TEXT")
     @Convert(converter = JsonConverter.class)
     private List<Object> nodes;

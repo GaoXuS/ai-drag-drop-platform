@@ -11,11 +11,11 @@ export const useWorkflowStore = defineStore('workflow', () => {
   const error = ref<string | null>(null)
 
   // 獲取所有工作流
-  const fetchWorkflows = async () => {
+  const fetchWorkflows = async (projectId?: string) => {
     loading.value = true
     error.value = null
     try {
-      workflows.value = await workflowApi.getAllWorkflows()
+      workflows.value = await workflowApi.getAllWorkflows(projectId)
     } catch (err: any) {
       error.value = err.message || '獲取工作流失敗'
       console.error('Fetch workflows error:', err)

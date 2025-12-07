@@ -9,15 +9,23 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import com.aidragdrop.repository.ProjectRepository;
 
 @Service
 @RequiredArgsConstructor
 public class WorkflowService {
     
     private final WorkflowRepository workflowRepository;
+    private final ProjectRepository projectRepository;
     
     public List<WorkflowDTO> getAllWorkflows() {
         return workflowRepository.findAll().stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+    
+    public List<WorkflowDTO> getWorkflowsByProjectId(String projectId) {
+        return workflowRepository.findByProjectId(projectId).stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
@@ -30,6 +38,10 @@ public class WorkflowService {
     
     @Transactional
     public WorkflowDTO createWorkflow(WorkflowDTO dto) {
+        // 驗證項目是否存在
+        if (dto.getProjectId() != null && !projectRepository.existsById(dto.getProjectId())) {
+            throw new RuntimeException("項目不存在: " + dto.getProjectId());
+        }
         Workflow workflow = toEntity(dto);
         workflow = workflowRepository.save(workflow);
         return toDTO(workflow);
@@ -43,6 +55,13 @@ public class WorkflowService {
         
         workflow.setName(dto.getName());
         workflow.setDescription(dto.getDescription());
+        if (dto.getProjectId() != null) {
+            // 驗證項目是否存在
+            if (!projectRepository.existsById(dto.getProjectId())) {
+                throw new RuntimeException("項目不存在: " + dto.getProjectId());
+            }
+            workflow.setProjectId(dto.getProjectId());
+        }
         // 將 List<Map<String, Object>> 轉換為 List<Object>
         if (dto.getNodes() != null) {
             workflow.setNodes((List<Object>) (List<?>) dto.getNodes());
@@ -69,6 +88,7 @@ public class WorkflowService {
         dto.setId(workflow.getId());
         dto.setName(workflow.getName());
         dto.setDescription(workflow.getDescription());
+        dto.setProjectId(workflow.getProjectId());
         // 安全地转换 List<Object> 到 List<Map<String, Object>>
         if (workflow.getNodes() != null) {
             dto.setNodes(workflow.getNodes().stream()
@@ -91,6 +111,7 @@ public class WorkflowService {
         }
         workflow.setName(dto.getName());
         workflow.setDescription(dto.getDescription());
+        workflow.setProjectId(dto.getProjectId());
         // 將 List<Map<String, Object>> 轉換為 List<Object>
         if (dto.getNodes() != null) {
             workflow.setNodes((List<Object>) (List<?>) dto.getNodes());

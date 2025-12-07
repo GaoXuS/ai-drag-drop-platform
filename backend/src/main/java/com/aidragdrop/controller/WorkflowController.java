@@ -21,7 +21,11 @@ public class WorkflowController {
     private final TaskService taskService;
     
     @GetMapping
-    public ResponseEntity<List<WorkflowDTO>> getAllWorkflows() {
+    public ResponseEntity<List<WorkflowDTO>> getAllWorkflows(
+            @RequestParam(required = false) String projectId) {
+        if (projectId != null) {
+            return ResponseEntity.ok(workflowService.getWorkflowsByProjectId(projectId));
+        }
         return ResponseEntity.ok(workflowService.getAllWorkflows());
     }
     

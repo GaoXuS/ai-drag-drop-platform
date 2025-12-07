@@ -9,6 +9,7 @@ public class WorkflowDTO {
     private String id;
     private String name;
     private String description;
+    private String projectId;
     private List<Map<String, Object>> nodes;
     private List<Map<String, Object>> connections;
 }

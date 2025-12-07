@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+import java.util.List;
 import java.util.Map;
 
 @Converter
@@ -25,13 +26,15 @@ public class JsonConverter implements AttributeConverter<Object, String> {
     
     @Override
     public Object convertToEntityAttribute(String dbData) {
-        if (dbData == null || dbData.isEmpty()) {
+        if (dbData == null || dbData.trim().isEmpty()) {
             return null;
         }
         try {
-            return objectMapper.readValue(dbData, new TypeReference<Map<String, Object>>() {});
+            // 先尝试解析为通用对象，支持Map和List
+            return objectMapper.readValue(dbData, Object.class);
         } catch (Exception e) {
-            throw new RuntimeException("Error converting to entity attribute", e);
+            // 如果解析失败，记录错误并返回null
+            throw new RuntimeException("Error converting to entity attribute: " + e.getMessage(), e);
         }
     }
 }

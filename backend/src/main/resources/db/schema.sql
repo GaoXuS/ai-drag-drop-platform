@@ -18,34 +18,54 @@ CREATE TABLE IF NOT EXISTS ai_modules (
     id VARCHAR(36) PRIMARY KEY COMMENT '模組ID (UUID)',
     name VARCHAR(255) NOT NULL UNIQUE COMMENT '模組名稱',
     type VARCHAR(255) NOT NULL COMMENT '模組類型',
+    category VARCHAR(50) DEFAULT 'basic' COMMENT '模組分類: basic(基礎組件), advanced(高級組件)',
     description TEXT COMMENT '模組描述',
     icon VARCHAR(255) COMMENT '模組圖標',
     version VARCHAR(255) NOT NULL COMMENT '模組版本',
     config TEXT COMMENT '模組配置 (JSON)',
     api_config TEXT NOT NULL COMMENT 'API 配置 (JSON)',
+    properties TEXT COMMENT '組件屬性配置 (JSON)',
     created_at DATETIME NOT NULL COMMENT '創建時間',
     updated_at DATETIME NOT NULL COMMENT '更新時間',
     INDEX idx_name (name),
-    INDEX idx_type (type)
+    INDEX idx_type (type),
+    INDEX idx_category (category)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='AI 模組表';
 
 -- ============================================
--- 2. 工作流表 (workflows)
+-- 2. 項目表 (projects)
+-- ============================================
+CREATE TABLE IF NOT EXISTS projects (
+    id VARCHAR(36) PRIMARY KEY COMMENT '項目ID (UUID)',
+    name VARCHAR(255) NOT NULL COMMENT '項目名稱',
+    description TEXT COMMENT '項目描述',
+    icon VARCHAR(500) COMMENT '項目圖標URL',
+    created_at DATETIME NOT NULL COMMENT '創建時間',
+    updated_at DATETIME NOT NULL COMMENT '更新時間',
+    INDEX idx_name (name),
+    INDEX idx_created_at (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='項目表';
+
+-- ============================================
+-- 3. 工作流表 (workflows)
 -- ============================================
 CREATE TABLE IF NOT EXISTS workflows (
     id VARCHAR(36) PRIMARY KEY COMMENT '工作流ID (UUID)',
     name VARCHAR(255) NOT NULL COMMENT '工作流名稱',
     description TEXT COMMENT '工作流描述',
+    project_id VARCHAR(36) NOT NULL COMMENT '項目ID',
     nodes TEXT COMMENT '節點列表 (JSON)',
     connections TEXT COMMENT '連接關係 (JSON)',
     created_at DATETIME NOT NULL COMMENT '創建時間',
     updated_at DATETIME NOT NULL COMMENT '更新時間',
     INDEX idx_name (name),
-    INDEX idx_created_at (created_at)
+    INDEX idx_project_id (project_id),
+    INDEX idx_created_at (created_at),
+    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='工作流表';
 
 -- ============================================
--- 3. 任務表 (tasks)
+-- 4. 任務表 (tasks)
 -- ============================================
 CREATE TABLE IF NOT EXISTS tasks (
     id VARCHAR(36) PRIMARY KEY COMMENT '任務ID (UUID)',
@@ -63,7 +83,7 @@ CREATE TABLE IF NOT EXISTS tasks (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='任務表';
 
 -- ============================================
--- 4. 任務日誌表 (task_logs)
+-- 5. 任務日誌表 (task_logs)
 -- ============================================
 CREATE TABLE IF NOT EXISTS task_logs (
     id VARCHAR(36) PRIMARY KEY COMMENT '日誌ID (UUID)',

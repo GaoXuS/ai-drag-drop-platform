@@ -3,11 +3,29 @@ export interface AIModule {
   id: string
   name: string
   type: string
+  category?: 'basic' | 'advanced' // 基礎組件、高級組件
   description?: string
   icon?: string
   version: string
   config: ModuleConfig
   apiConfig: APIConfig
+  properties?: ComponentProperties // 組件屬性配置
+}
+
+// 組件屬性配置
+export interface ComponentProperties {
+  [key: string]: any
+  inputType?: 'text' | 'voice' | 'image'
+  timeout?: number
+  enableCache?: boolean
+  enableLog?: boolean
+  conditionType?: string
+  method?: string
+  model?: string
+  temperature?: number
+  maxTokens?: number
+  analysisType?: string
+  pluginType?: string
 }
 
 // 模組配置
@@ -50,6 +68,7 @@ export interface Workflow {
   id: string
   name: string
   description?: string
+  projectId: string
   nodes: ModuleNode[]
   connections: Connection[]
   createdAt: string
@@ -77,5 +96,15 @@ export interface TaskLog {
   message: string
   timestamp: string
   data?: any
+}
+
+// 項目
+export interface Project {
+  id: string
+  name: string
+  description?: string
+  icon?: string
+  createdAt: string
+  updatedAt: string
 }
 

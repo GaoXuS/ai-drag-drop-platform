@@ -47,11 +47,15 @@ public class AIModuleService {
         
         module.setName(dto.getName());
         module.setType(dto.getType());
+        if (dto.getCategory() != null) {
+            module.setCategory(dto.getCategory());
+        }
         module.setDescription(dto.getDescription());
         module.setIcon(dto.getIcon());
         module.setVersion(dto.getVersion());
         module.setConfig(dto.getConfig());
         module.setApiConfig(dto.getApiConfig());
+        module.setProperties(dto.getProperties());
         
         module = moduleRepository.save(module);
         return toDTO(module);
@@ -71,11 +75,13 @@ public class AIModuleService {
         dto.setId(module.getId());
         dto.setName(module.getName());
         dto.setType(module.getType());
+        dto.setCategory(module.getCategory());
         dto.setDescription(module.getDescription());
         dto.setIcon(module.getIcon());
         dto.setVersion(module.getVersion());
         dto.setConfig(module.getConfig());
         dto.setApiConfig(module.getApiConfig());
+        dto.setProperties(module.getProperties());
         return dto;
     }
     
@@ -86,11 +92,15 @@ public class AIModuleService {
         }
         module.setName(dto.getName());
         module.setType(dto.getType());
+        if (dto.getCategory() != null) {
+            module.setCategory(dto.getCategory());
+        }
         module.setDescription(dto.getDescription());
         module.setIcon(dto.getIcon());
         module.setVersion(dto.getVersion());
         module.setConfig(dto.getConfig());
         module.setApiConfig(dto.getApiConfig());
+        module.setProperties(dto.getProperties());
         return module;
     }
 }
